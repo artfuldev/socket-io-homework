@@ -13,11 +13,13 @@ $(function () {
   const $form = $('#message-input-form');
   const $status = $('#status');
   const $typists = $('#typing-status');
+  const $users = $('#users');
   const STATUS_PERSISTENCE_TIME = 1500;
   const TYPING_TOLERANCE_TIME = 900;
   var user;
   var typing_timeout;
   var typing;
+  var active_users = new Set();
 
   const stopTyping = () => { typing = false; socket.emit(TYPING_STOPPED); }
   const startTyping = () => { typing = true; socket.emit(TYPING_STARTED); }
@@ -78,9 +80,24 @@ $(function () {
     updateTypingStatus();
   };
 
-  socket.on(USER_CONNECTED, nickname => status(nickname + ' connected'));
-  socket.on(USER_DISCONNECTED, nickname => status(nickname + ' disconnected'));
-  socket.on(NICKNAME_OBTAINED, nickname => { user = nickname; $('main').show(); $('aside').hide(); });
+  const userConnected = ({ user, silent }) => {
+    if (!silent) status(user + ' connected');
+    active_users.add(user);
+    const id = '#' + user.replace('#', '_');
+    $users.find(id).remove();
+    $('<li>', { id }).text(user).appendTo($users);
+  }
+
+  const userDisconnected = user => {
+    status(user + ' disconnected');
+    active_users.delete(user);
+    const id = '#' + user.replace('#', '_');
+    $users.find(id).remove();
+  }
+
+  socket.on(USER_CONNECTED, userConnected);
+  socket.on(USER_DISCONNECTED, userDisconnected);
+  socket.on(NICKNAME_OBTAINED, nickname => { user = nickname; $('#overlay').hide(); });
   socket.on(CHAT_MESSAGE_RECEIVED, receive);
   socket.on(TYPING_STARTED, startedTyping);
   socket.on(TYPING_STOPPED, stoppedTyping);
