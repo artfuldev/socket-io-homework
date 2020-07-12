@@ -22,11 +22,9 @@ app.get('/styles.css', (req, res) => {
 const { CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED } = events
 
 io.on('connection', (socket) => {
-  console.log(CHAT_MESSAGE_SENT)
-  socket.on(CHAT_MESSAGE_SENT, (msg) => {
-    console.log(CHAT_MESSAGE_RECEIVED, msg)
-    io.emit(CHAT_MESSAGE_RECEIVED, msg);
-  });
+  io.emit(events.USER_CONNECTED);
+  socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, message));
+  socket.on('disconnect', () => io.emit(events.USER_DISCONNECTED));
 });
 
 http.listen(3000, () => {
