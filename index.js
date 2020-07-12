@@ -1,7 +1,9 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
-var events = require('./events')
+var events = require('./events');
+
+const nicknames = new Set();
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/src/index.html');
@@ -25,12 +27,21 @@ const {
   NICKNAME_REQUESTED, NICKNAME_OBTAINED
 } = events
 
+const nickname = (requested_nickname, suffix = "") => {
+  if (!nicknames.has(requested_nickname + suffix)) {
+    nicknames.add(requested_nickname + suffix);
+    return requested_nickname + suffix;
+  }
+  return nickname(requested_nickname, "#" + Math.floor(1000 + Math.random() * 9000));
+}
+
 io.on('connection', socket => {
-  socket.on(NICKNAME_REQUESTED, nickname => {
-    socket.emit(NICKNAME_OBTAINED, nickname);
-    socket.broadcast.emit(USER_CONNECTED, nickname);
-    socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, { from: nickname, message }));
-    socket.on('disconnect', () => io.emit(USER_DISCONNECTED, nickname));
+  socket.on(NICKNAME_REQUESTED, requested_nickname => {
+    const user = nickname(requested_nickname);
+    socket.emit(NICKNAME_OBTAINED, user);
+    socket.broadcast.emit(USER_CONNECTED, user);
+    socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, { from: user, message }));
+    socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); nicknames.delete(user); });
   });
 });
 
