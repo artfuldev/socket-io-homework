@@ -15,6 +15,10 @@ app.get('/app.js', (req, res) => {
   res.sendFile(__dirname + '/src/app.js');
 });
 
+app.get('/styles.css', (req, res) => {
+  res.sendFile(__dirname + '/src/styles.css');
+});
+
 const { CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED } = events
 
 io.on('connection', (socket) => {
