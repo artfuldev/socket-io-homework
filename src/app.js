@@ -1,4 +1,8 @@
-const { CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED, USER_CONNECTED, USER_DISCONNECTED } = events
+const {
+  CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED,
+  USER_CONNECTED, USER_DISCONNECTED,
+  NICKNAME_REQUESTED, NICKNAME_OBTAINED
+} = events
 
 $(function () {
 
@@ -8,6 +12,7 @@ $(function () {
   const $form = $('#message-input-form');
   const $status = $('#status');
   const STATUS_PERSISTENCE_TIME = 1500;
+  var user;
 
   $form.submit(event => {
     event.preventDefault();
@@ -16,8 +21,8 @@ $(function () {
     $input.val('');
   });
 
-  socket.on(CHAT_MESSAGE_RECEIVED, message => {
-    $messages.append($('<li>').text(message));
+  socket.on(CHAT_MESSAGE_RECEIVED, ({ from, message }) => {
+    $messages.append($('<li>').text(from + ": " + message));
   });
 
   const status = text => {
@@ -26,6 +31,8 @@ $(function () {
     setTimeout(() => $update.remove(), STATUS_PERSISTENCE_TIME);
   }
 
-  socket.on(USER_CONNECTED, () => status('user connected'));
-  socket.on(USER_DISCONNECTED, () => status('user disconnected'));
+  socket.on(USER_CONNECTED, nickname => status(nickname + ' connected'));
+  socket.on(USER_DISCONNECTED, nickname => status(nickname + ' disconnected'));
+  socket.on(NICKNAME_OBTAINED, nickname => { user = nickname; $('main').show(); $('aside').hide(); });
+  socket.emit(NICKNAME_REQUESTED, prompt('Enter nickname:'));
 });
