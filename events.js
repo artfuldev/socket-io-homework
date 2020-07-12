@@ -5,5 +5,7 @@
   exports.USER_DISCONNECTED = "user:disconnected"
   exports.NICKNAME_REQUESTED = "nickname:requested"
   exports.NICKNAME_OBTAINED = "nickname:obtained"
+  exports.TYPING_STARTED = "typing:started"
+  exports.TYPING_STOPPED = "typing:stopped"
 }(typeof exports === 'undefined' ? this.events = {} : exports));
 
