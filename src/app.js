@@ -35,12 +35,20 @@ $(function () {
 
   $input.on('focus', stopTyping);
 
+  const parse = text => {
+    if (!text.match(/\/whisper:\w.*/g)) return { message: text };
+    const split = text.replace(' ', ':::').split(':::');
+    const to = split[0].split(':').pop();
+    const message = split[1];
+    return { message, to };
+  };
+
   $form.submit(event => {
     event.preventDefault();
     event.stopPropagation();
-    const message = $input.val();
-    socket.emit(CHAT_MESSAGE_SENT, message);
-    receive({ from: user, message });
+    const chat_message = parse($input.val());
+    socket.emit(CHAT_MESSAGE_SENT, chat_message);
+    receive({ from: user, message: chat_message.message });
     $input.val('');
     $input.trigger('focus');
   });
