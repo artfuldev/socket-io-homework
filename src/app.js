@@ -80,8 +80,8 @@ $(function () {
     updateTypingStatus();
   };
 
-  const userConnected = user => {
-    status(user + ' connected');
+  const userConnected = ({ user, silent }) => {
+    if (!silent) status(user + ' connected');
     active_users.add(user);
     const id = '#' + user.replace('#', '_');
     $users.find(id).remove();

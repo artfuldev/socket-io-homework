@@ -40,8 +40,8 @@ io.on('connection', socket => {
   socket.on(NICKNAME_REQUESTED, requested_nickname => {
     const user = nickname(requested_nickname);
     socket.emit(NICKNAME_OBTAINED, user);
-    active_nicknames.forEach(nickname => { if (user !== nickname) socket.emit(USER_CONNECTED, nickname); });
-    socket.broadcast.emit(USER_CONNECTED, user);
+    active_nicknames.forEach(nickname => { if (user !== nickname) socket.emit(USER_CONNECTED, { user: nickname, silent: true }); });
+    socket.broadcast.emit(USER_CONNECTED, { user });
     socket.on(CHAT_MESSAGE_SENT, message => socket.broadcast.emit(CHAT_MESSAGE_RECEIVED, { from: user, message }));
     socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); active_nicknames.delete(user); });
     socket.on(TYPING_STARTED, () => socket.broadcast.emit(TYPING_STARTED, user));
