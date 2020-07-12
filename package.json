@@ -1,0 +1,27 @@
+{
+  "name": "socket-io-homework",
+  "version": "1.0.0",
+  "description": "A quick project that completes the homework part of the socket.io getting started guide",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artfuldev/socket-io-homework.git"
+  },
+  "keywords": [
+    "socket-io",
+    "homework",
+    "getting-started"
+  ],
+  "author": "Sudarsan \"artfuldev\" Balaji <Sudarsan.Balaji@artfuldev.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/artfuldev/socket-io-homework/issues"
+  },
+  "homepage": "https://github.com/artfuldev/socket-io-homework#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
