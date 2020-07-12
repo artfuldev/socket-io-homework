@@ -19,12 +19,19 @@ app.get('/styles.css', (req, res) => {
   res.sendFile(__dirname + '/src/styles.css');
 });
 
-const { CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED } = events
+const {
+  CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED,
+  USER_CONNECTED, USER_DISCONNECTED,
+  NICKNAME_REQUESTED, NICKNAME_OBTAINED
+} = events
 
-io.on('connection', (socket) => {
-  io.emit(events.USER_CONNECTED);
-  socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, message));
-  socket.on('disconnect', () => io.emit(events.USER_DISCONNECTED));
+io.on('connection', socket => {
+  socket.on(NICKNAME_REQUESTED, nickname => {
+    socket.emit(NICKNAME_OBTAINED, nickname);
+    socket.broadcast.emit(USER_CONNECTED, nickname);
+    socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, { from: nickname, message }));
+    socket.on('disconnect', () => io.emit(USER_DISCONNECTED, nickname));
+  });
 });
 
 http.listen(3000, () => {
