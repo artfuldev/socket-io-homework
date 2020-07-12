@@ -40,7 +40,7 @@ io.on('connection', socket => {
     const user = nickname(requested_nickname);
     socket.emit(NICKNAME_OBTAINED, user);
     socket.broadcast.emit(USER_CONNECTED, user);
-    socket.on(CHAT_MESSAGE_SENT, message => io.emit(CHAT_MESSAGE_RECEIVED, { from: user, message }));
+    socket.on(CHAT_MESSAGE_SENT, message => socket.broadcast.emit(CHAT_MESSAGE_RECEIVED, { from: user, message }));
     socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); nicknames.delete(user); });
   });
 });
