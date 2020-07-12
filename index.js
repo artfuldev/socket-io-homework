@@ -24,7 +24,8 @@ app.get('/styles.css', (req, res) => {
 const {
   CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED,
   USER_CONNECTED, USER_DISCONNECTED,
-  NICKNAME_REQUESTED, NICKNAME_OBTAINED
+  NICKNAME_REQUESTED, NICKNAME_OBTAINED,
+  TYPING_STARTED, TYPING_STOPPED
 } = events
 
 const nickname = (requested_nickname, suffix = "") => {
@@ -42,6 +43,8 @@ io.on('connection', socket => {
     socket.broadcast.emit(USER_CONNECTED, user);
     socket.on(CHAT_MESSAGE_SENT, message => socket.broadcast.emit(CHAT_MESSAGE_RECEIVED, { from: user, message }));
     socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); nicknames.delete(user); });
+    socket.on(TYPING_STARTED, () => socket.broadcast.emit(TYPING_STARTED, user));
+    socket.on(TYPING_STOPPED, () => socket.broadcast.emit(TYPING_STOPPED, user));
   });
 });
 
