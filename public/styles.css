@@ -105,6 +105,11 @@ aside {
   background: rgb(0, 132, 255);
 }
 
+.message-author {
+  font-size: 10px;
+  display: block;
+}
+
 #typing-status {
   position: absolute;
   bottom: 45px;

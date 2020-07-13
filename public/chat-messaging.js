@@ -13,7 +13,9 @@
   
     const receive = ({ from, message }) => {
       const $box = $('<li>').addClass('message-box');
-      const $message = $('<span>').addClass('message').text(from + ": " + message);
+      const $message = $('<div>').addClass('message');
+      $('<strong>').addClass('message-author').text(from).appendTo($message);
+      $('<span>').addClass('message-text').text(message).appendTo($message);
       if (from == user) {
         $message.addClass('primary');
         $box.addClass('primary');
