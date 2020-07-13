@@ -32,7 +32,7 @@ io.on('connection', socket => {
     Array
       .from(sockets.keys())
       .filter(key => user !== key)
-      .forEach(key => socket.emit(USER_CONNECTED, { user: key, silent: true }));
+      .forEach(user => socket.emit(USER_CONNECTED, { user, silent: true }));
     socket.broadcast.emit(USER_CONNECTED, { user });
     socket.on(CHAT_MESSAGE_SENT, ({ message, to }) =>
       [to]
