@@ -14,25 +14,28 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  background: #eee;
 }
 
-main {
+main, aside {
   position: absolute;
-  right: 26%;
+  right: 25%;
   top: 5px;
   left: 5px;
   bottom: 5px;
   background: #fff;
+}
+
+main {
   border-radius: 15px;
   box-shadow: 0 0 30px #eee;
 }
 
 aside {
-  position: absolute;
-  right: 0;
-  top: 0;
+  right: 5px;
   left: 75%;
-  bottom: 0;
+  padding: 10px;
+  background: transparent;
 }
 
 #overlay {
@@ -143,4 +146,15 @@ aside {
   padding: 5px 0;
   border-radius: 15px;
   box-sizing: border-box;
+}
+
+.users-container {
+  text-align: right;
+  list-style: none;
+}
+
+.users-container li {
+  margin-top: 5px;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
 }
