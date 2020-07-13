@@ -1,24 +1,16 @@
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
-var events = require('./events');
+const express = require('express');
+const app = express();
+const path = require('path')
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const events = require('./events');
 
 const sockets = new Map();
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/src/index.html');
-});
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.get('/events.js', (req, res) => {
   res.sendFile(__dirname + '/events.js');
-});
-
-app.get('/app.js', (req, res) => {
-  res.sendFile(__dirname + '/src/app.js');
-});
-
-app.get('/styles.css', (req, res) => {
-  res.sendFile(__dirname + '/src/styles.css');
 });
 
 const {
@@ -26,7 +18,7 @@ const {
   USER_CONNECTED, USER_DISCONNECTED,
   NICKNAME_REQUESTED, NICKNAME_OBTAINED,
   TYPING_STARTED, TYPING_STOPPED
-} = events
+} = events;
 
 const register = (socket, requested_nickname, suffix = "") => {
   const key = requested_nickname + suffix;
