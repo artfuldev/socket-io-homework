@@ -41,15 +41,16 @@ io.on('connection', socket => {
   socket.on(NICKNAME_REQUESTED, requested_nickname => {
     const user = register(socket, requested_nickname);
     socket.emit(NICKNAME_OBTAINED, user);
-    sockets.forEach((_, key) => { if (user !== key) socket.emit(USER_CONNECTED, { user: key, silent: true }); });
+    Array
+      .from(sockets.keys())
+      .filter(key => user !== key)
+      .forEach(key => socket.emit(USER_CONNECTED, { user: key, silent: true }));
     socket.broadcast.emit(USER_CONNECTED, { user });
-    socket.on(CHAT_MESSAGE_SENT, ({ message, to }) => {
-      if (to == undefined) {
-        socket.broadcast.emit(CHAT_MESSAGE_RECEIVED, { from: user, message });
-      } else if (sockets.has(to)) {
-        sockets.get(to).emit(CHAT_MESSAGE_RECEIVED, { from: user, message });
-      }
-    });
+    socket.on(CHAT_MESSAGE_SENT, ({ message, to }) =>
+      [to]
+        .map(to => to == undefined ? socket.broadcast : sockets.get(to))
+        .filter(Boolean)
+        .forEach(socket => socket.emit(CHAT_MESSAGE_RECEIVED, { from: user, message })));
     socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); sockets.delete(user); });
     socket.on(TYPING_STARTED, () => socket.broadcast.emit(TYPING_STARTED, user));
     socket.on(TYPING_STOPPED, () => socket.broadcast.emit(TYPING_STOPPED, user));
