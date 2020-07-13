@@ -157,4 +157,6 @@ aside {
   margin-top: 5px;
   border-bottom: 1px solid #ccc;
   padding: 10px 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
