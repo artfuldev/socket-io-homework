@@ -12,4 +12,4 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
 .own-message { text-align: right; }
-#typing-status { height: 45px; position: absolute; bottom: 45px; width: 100%; background: transparent; color: #333; }
+#typing-status { position: absolute; bottom: 45px; width: 100%; background: transparent; color: #333; }
