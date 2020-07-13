@@ -12,9 +12,16 @@
     };
   
     const receive = ({ from, message }) => {
-      const $message = $('<li>').text(from + ": " + message);
-      if (from == user) $message.addClass('own-message');
-      $messages.append($message);
+      const $box = $('<li>').addClass('message-box');
+      const $message = $('<div>').addClass('message');
+      $('<strong>').addClass('message-author').text(from).appendTo($message);
+      $('<span>').addClass('message-text').text(message).appendTo($message);
+      if (from == user) {
+        $message.addClass('primary');
+        $box.addClass('primary');
+      }
+      $box.append($message);
+      $messages.append($box);
     };
   
     $form.submit(event => {
