@@ -28,6 +28,7 @@ const register = (socket, requested_nickname, suffix = "") => {
 io.on('connection', socket => {
   socket.on(NICKNAME_REQUESTED, requested_nickname => {
     const user = register(socket, requested_nickname);
+    socket.broadcast.emit(USER_CONNECTED, { user });
     Array
       .from(sockets.keys())
       .filter(key => user !== key)
@@ -41,7 +42,6 @@ io.on('connection', socket => {
     socket.on(TYPING_STARTED, () => socket.broadcast.emit(TYPING_STARTED, user));
     socket.on(TYPING_STOPPED, () => socket.broadcast.emit(TYPING_STOPPED, user));
     socket.emit(NICKNAME_OBTAINED, user);
-    socket.broadcast.emit(USER_CONNECTED, { user });
   });
 });
 
