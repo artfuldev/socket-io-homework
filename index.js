@@ -28,12 +28,10 @@ const register = (socket, requested_nickname, suffix = "") => {
 io.on('connection', socket => {
   socket.on(NICKNAME_REQUESTED, requested_nickname => {
     const user = register(socket, requested_nickname);
-    socket.emit(NICKNAME_OBTAINED, user);
     Array
       .from(sockets.keys())
       .filter(key => user !== key)
       .forEach(user => socket.emit(USER_CONNECTED, { user, silent: true }));
-    socket.broadcast.emit(USER_CONNECTED, { user });
     socket.on(CHAT_MESSAGE_SENT, ({ message, to }) =>
       [to]
         .map(to => to == undefined ? socket.broadcast : sockets.get(to))
@@ -42,6 +40,8 @@ io.on('connection', socket => {
     socket.on('disconnect', () => { io.emit(USER_DISCONNECTED, user); sockets.delete(user); });
     socket.on(TYPING_STARTED, () => socket.broadcast.emit(TYPING_STARTED, user));
     socket.on(TYPING_STOPPED, () => socket.broadcast.emit(TYPING_STOPPED, user));
+    socket.emit(NICKNAME_OBTAINED, user);
+    socket.broadcast.emit(USER_CONNECTED, { user });
   });
 });
 
