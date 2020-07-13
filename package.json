@@ -4,6 +4,7 @@
   "description": "A quick project that completes the homework part of the socket.io getting started guide",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

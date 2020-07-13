@@ -3,15 +3,11 @@ const app = express();
 const path = require('path')
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const events = require('./events');
+const events = require('./public/events');
 
 const sockets = new Map();
 
 app.use('/', express.static(path.join(__dirname, 'public')));
-
-app.get('/events.js', (req, res) => {
-  res.sendFile(__dirname + '/events.js');
-});
 
 const {
   CHAT_MESSAGE_SENT, CHAT_MESSAGE_RECEIVED,
